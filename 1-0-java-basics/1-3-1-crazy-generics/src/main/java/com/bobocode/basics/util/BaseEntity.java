@@ -3,7 +3,6 @@ package com.bobocode.basics.util;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -17,5 +16,13 @@ public abstract class BaseEntity {
     public BaseEntity(UUID uuid) {
         this.uuid = uuid;
         this.createdOn = LocalDateTime.now();
+    }
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public LocalDateTime getCreatedOn() {
+        return createdOn;
     }
 }
