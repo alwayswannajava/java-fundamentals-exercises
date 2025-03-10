@@ -208,7 +208,7 @@ public class CrazyGenerics {
          * @param <T>        type of elements
          * @return optional max value
          */
-        public static <T extends BaseEntity> Optional<T> findMax(Iterable<T> elements, Comparator<T> comparator) {
+        public static <T extends BaseEntity> Optional<T> findMax(Iterable<T> elements, Comparator<? super T> comparator) {
             return StreamSupport.stream(elements.spliterator(), false)
                     .max(comparator);
         }
@@ -227,7 +227,7 @@ public class CrazyGenerics {
          */
 
         public static <T extends BaseEntity> T findMostRecentlyCreatedEntity(Collection<T> entities) {
-            return findMax(entities, Comparator.comparing(BaseEntity::getCreatedOn))
+            return findMax(entities, CREATED_ON_COMPARATOR)
                     .orElseThrow(() -> new NoSuchElementException("No present value"));
         }
 
