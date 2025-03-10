@@ -101,7 +101,7 @@ public class CrazyGenerics {
      *
      * @param <T> – the type of objects that can be processed
      */
-    interface StrictProcessor <T extends Serializable, Comparable> { // todo: make it generic
+    interface StrictProcessor <T extends Serializable & Comparable<? super T>> { // todo: make it generic
         void process(T obj);
     }
 
@@ -124,7 +124,7 @@ public class CrazyGenerics {
      *
      * @param <T> – a type of the entity that should be a subclass of {@link BaseEntity}
      */
-    interface ListRepository <T extends BaseEntity> extends CollectionRepository { // todo: update interface according to the javadoc
+    interface ListRepository <T extends BaseEntity> extends CollectionRepository<T, List<T>> { // todo: update interface according to the javadoc
     }
 
     /**
@@ -137,7 +137,7 @@ public class CrazyGenerics {
      *
      * @param <E> a type of collection elements
      */
-    interface ComparableCollection <E> extends Comparable<E>, Collection<E> {
+    interface ComparableCollection <E extends Collection<?>> extends Comparable<E>, Collection<E> {
         @Override
         int compareTo(E o); // todo: refactor it to make generic and provide a default impl of compareTo
     }
@@ -196,11 +196,12 @@ public class CrazyGenerics {
          * @param <T>          entity type
          * @return true if entities list contains target entity more than once
          */
-        public static <T> boolean hasDuplicates (Collection<? extends BaseEntity> entities,
+        public static <T extends BaseEntity> boolean hasDuplicates (
+                Collection<? extends BaseEntity> entities,
                                             T targetEntity) {
             return entities
                     .stream()
-                    .anyMatch(element -> element.getUuid().equals(targetEntity));
+                    .anyMatch(element -> element.getUuid().equals(targetEntity.getUuid()));
         }
 
         /**
