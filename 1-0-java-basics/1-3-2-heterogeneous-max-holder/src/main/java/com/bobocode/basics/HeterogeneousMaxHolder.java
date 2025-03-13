@@ -1,5 +1,7 @@
 package com.bobocode.basics;
 
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -15,10 +17,10 @@ import java.util.Map;
  * @author Taras Boychuk
  */
 public class HeterogeneousMaxHolder {
-
+    private Map<Class<?>, Object> maxHolderMap = new HashMap<>();
     /**
-     * A method put stores a provided value by its type, if the value is greater than the current maximum. In other words,
-     * the logic
+     * A method put stores a provided value by its type, if the value is greater than the current maximum.
+     * In other words, the logic
      * of this method makes sure that only max value is stored and everything else is ignored.
      * <p>
      * If the current max value is less than a provided one, or if it's null, then a provided value gets stored and the old
@@ -31,8 +33,14 @@ public class HeterogeneousMaxHolder {
      * @param <T>   value type parameter
      * @return a smaller value among the provided value and the current maximum
      */
-    // todo: implement a method according to javadoc
+    public <T extends Comparable<? super T>> void put(Class<T> key,
+                                                      T value) {
+        T currentMax = key.cast(maxHolderMap.get(key));
+        if (maxHolderMap.get(key) == null ) {
+            maxHolderMap.put(key, value);
+        }
 
+    }
     /**
      * An overloaded method put implements the same logic using a custom comparator. A given comparator is wrapped with
      * a null-safe comparator, considering null smaller than any non-null object.
