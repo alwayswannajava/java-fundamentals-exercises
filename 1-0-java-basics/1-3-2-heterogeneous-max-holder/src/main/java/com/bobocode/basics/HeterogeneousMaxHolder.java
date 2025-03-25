@@ -18,6 +18,7 @@ import java.util.Map;
  */
 public class HeterogeneousMaxHolder {
     private Map<Class<?>, Object> maxHolderMap = new HashMap<>();
+
     /**
      * A method put stores a provided value by its type, if the value is greater than the current maximum.
      * In other words, the logic
@@ -33,14 +34,11 @@ public class HeterogeneousMaxHolder {
      * @param <T>   value type parameter
      * @return a smaller value among the provided value and the current maximum
      */
-    public <T extends Comparable<? super T>> void put(Class<T> key,
-                                                      T value) {
-        T currentMax = key.cast(maxHolderMap.get(key));
-        if (maxHolderMap.get(key) == null ) {
-            maxHolderMap.put(key, value);
-        }
-
+    public <T extends Comparable<? super T>> T put(Class<T> key,
+                                                   T value) {
+        return put(key, value, Comparator.naturalOrder());
     }
+
     /**
      * An overloaded method put implements the same logic using a custom comparator. A given comparator is wrapped with
      * a null-safe comparator, considering null smaller than any non-null object.
@@ -53,7 +51,17 @@ public class HeterogeneousMaxHolder {
      * @param <T>        value type parameter
      * @return a smaller value among the provided value and the current maximum
      */
-    // todo: implement a method according to javadoc
+    public <T> T put(Class<T> key,
+                     T value,
+                     Comparator<? super T> comparator) {
+        comparator = Comparator.nullsFirst(comparator);
+        T currentMax = key.cast(maxHolderMap.get(key));
+        if (comparator.compare(currentMax, value) < 0) {
+            maxHolderMap.put(key, value);
+            return currentMax;
+        }
+        return value;
+    }
 
     /**
      * A method getMax returns a max value by the given type. If no value is stored by this type, then it returns null.
@@ -62,5 +70,8 @@ public class HeterogeneousMaxHolder {
      * @param <T> value type parameter
      * @return current max value or null
      */
-    // todo: implement a method according to javadoc
+    public <T> T getMax(Class<T> key) {
+        T currentMax = key.cast(maxHolderMap.get(key));
+        return currentMax;
+    }
 }
