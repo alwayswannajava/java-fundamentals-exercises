@@ -36,7 +36,8 @@ public class FlightService {
      * @return a list of found flight numbers
      */
     public List<String> searchFlights(String query) {
-        return flights.findAll().stream()
+        return flights.findAll()
+                .stream()
                 .filter(line -> line.contains(query))
                 .collect(Collectors.toList());
     }
