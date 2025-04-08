@@ -1,6 +1,8 @@
 package com.bobocode.se;
 
 import lombok.SneakyThrows;
+
+import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -82,7 +84,11 @@ public class FileStats {
 
     @SneakyThrows
     private Stream<String> openFileStream(Path path) {
-        return Files.lines(path);
+        try {
+            return Files.lines(path);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private Stream<Character> transformStringStreamToCharacterStream(Stream<String> fileStream) {
