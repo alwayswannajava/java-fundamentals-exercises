@@ -3,6 +3,9 @@ package com.bobocode.cs;
 import com.bobocode.cs.exception.EmptyStackException;
 import com.bobocode.util.ExerciseNotCompletedException;
 
+import java.util.Objects;
+import java.util.stream.Stream;
+
 /**
  * {@link LinkedStack} is a stack implementation that is based on singly linked generic nodes.
  * A node is implemented as inner static class {@link Node<T>}.
@@ -24,9 +27,8 @@ public class LinkedStack<T> implements Stack<T> {
      */
     public static <T> LinkedStack<T> of(T... elements) {
         LinkedStack<T> stack = new LinkedStack<>();
-        for (int i = 0; i < elements.length; i++) {
-            stack.push(elements[i]);
-        }
+        Stream.of(elements)
+                .forEach(stack::push);
         return stack;
     }
 
@@ -38,18 +40,12 @@ public class LinkedStack<T> implements Stack<T> {
      */
     @Override
     public void push(T element) {
-        if (element == null) {
-            throw new NullPointerException();
+        Objects.requireNonNull(element);
+        Node<T> newNode = new Node<>(element);
+        if (head != null) {
+            newNode.next = head;
         }
-        if (head == null) {
-            head = new Node<>(element);
-            size++;
-            return;
-        }
-        Node<T> oldHead = head;
-        Node<T> newHead = new Node<>(element);
-        newHead.next = oldHead;
-        head = newHead;
+        head = newNode;
         size++;
     }
 
