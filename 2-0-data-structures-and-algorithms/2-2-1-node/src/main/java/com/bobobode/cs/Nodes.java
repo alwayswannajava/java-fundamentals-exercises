@@ -43,8 +43,7 @@ public class Nodes {
      */
     public static <T> Node<T> pairOf(T firstElement, T secondElement) {
         Node<T> firstNode = new Node<>(firstElement);
-        Node<T> secondNode = new Node<>(secondElement);
-        firstNode.setNext(secondNode);
+        firstNode.setNext(new Node<>(secondElement));
         return firstNode;
     }
 
@@ -75,22 +74,13 @@ public class Nodes {
      * @return a reference to the first element of the chain
      */
     public static <T> Node<T> chainOf(T... elements) {
-        T[] nodes = elements;
-        Node<T> chainNode = new Node<>(nodes[0]);
-        for (int i = 1; i < nodes.length; i++) {
-            Node<T> newNode = new Node<>(nodes[i]);
-            if (chainNode.getNext() == null) {
-                chainNode.setNext(newNode);
-            } else {
-                Node<T> currentNode = chainNode;
-                while (chainNode.getNext() != null) {
-                    chainNode = chainNode.getNext();
-                }
-                chainNode.setNext(newNode);
-                chainNode = currentNode;
-            }
+        Node<T> firstNode = new Node<>(elements[0]);
+        Node<T> currentNode = firstNode;
+        for (int i = 1; i < elements.length; i++) {
+            currentNode.setNext(new Node<>(elements[i]));
+            currentNode = currentNode.getNext();
         }
-        return chainNode;
+        return firstNode;
     }
 
     /**
@@ -103,13 +93,13 @@ public class Nodes {
      * @return a reference to the first element of the chain
      */
     public static <T> Node<T> circleOf(T... elements) {
-        Node<T> chainNode = chainOf(elements);
-        Node<T> firstNode = chainNode;
-        while (chainNode.getNext() != null) {
-            chainNode = chainNode.getNext();
+        Node<T> firstNode = new Node<>(elements[0]);
+        Node<T> currentNode = firstNode;
+        for (int i = 1; i < elements.length; i++) {
+            currentNode.setNext(new Node<>(elements[i]));
+            currentNode = currentNode.getNext();
         }
-        chainNode.setNext(firstNode);
-        chainNode = firstNode;
-        return chainNode;
+        currentNode.setNext(firstNode);
+        return firstNode;
     }
 }
