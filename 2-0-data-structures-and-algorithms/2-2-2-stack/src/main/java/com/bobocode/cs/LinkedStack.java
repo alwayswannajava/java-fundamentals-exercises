@@ -1,8 +1,6 @@
 package com.bobocode.cs;
 
 import com.bobocode.cs.exception.EmptyStackException;
-import com.bobocode.util.ExerciseNotCompletedException;
-
 import java.util.Objects;
 import java.util.stream.Stream;
 
