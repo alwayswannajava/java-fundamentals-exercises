@@ -1,6 +1,7 @@
 package com.bobocode.cs;
 
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 /**
  * {@link LinkedList} is a list implementation that is based on singly linked generic nodes. A node is implemented as
@@ -57,24 +58,18 @@ public class LinkedList<T> implements List<T> {
      */
     @Override
     public void add(int index, T element) {
+        Objects.checkIndex(index, size + 1);
         Node<T> newNode = new Node<>(element);
         if (index == 0) {
-            Node<T> oldHead = head;
+            newNode.next = head;
             head = newNode;
-            head.next = oldHead;
         } else if (index == size) {
             tail.next = newNode;
             tail = newNode;
         } else {
-            checkIndex(index);
-            Node<T> node = findNodeByIndex(index);
-            if (node == null) {
-                add(element);
-            } else {
-                Node<T> prevNode = findNodeByIndex(index - 1);
-                newNode.next = node;
-                prevNode.next = newNode;
-            }
+            Node<T> current = findNodeByIndex(index - 1);
+            newNode.next = current.next;
+            current.next = newNode;
         }
         size++;
     }
@@ -143,21 +138,18 @@ public class LinkedList<T> implements List<T> {
         checkIndexWithEmpty(index);
         T removedElem;
         Node<T> prevNode;
-        Node<T> currentNode;
         if (index == 0) {
-            removedElem = getFirst();
+            removedElem = head.element;
             head = head.next;
         } else if (index == size - 1) {
-            removedElem = getLast();
+            removedElem = tail.element;
             prevNode = findNodeByIndex(index - 1);
             tail = prevNode;
-            tail.next = null;
         } else {
             checkIndex(index);
-            currentNode = findNodeByIndex(index);
             prevNode = findNodeByIndex(index - 1);
-            prevNode.next = currentNode.next;
-            removedElem = currentNode.element;
+            removedElem = prevNode.next.element;
+            prevNode.next = prevNode.next.next;
         }
         size--;
         return removedElem;
@@ -171,11 +163,12 @@ public class LinkedList<T> implements List<T> {
      */
     @Override
     public boolean contains(T element) {
+        Node<T> current = head;
         for (int i = 0; i < size; i++) {
-            T elem = get(i);
-            if (elem == element) {
+            if (current.element.equals(element)) {
                 return true;
             }
+            current = current.next;
         }
         return false;
     }
@@ -205,7 +198,7 @@ public class LinkedList<T> implements List<T> {
      */
     @Override
     public void clear() {
-        head = null;
+        head = tail = null;
         size = 0;
     }
 
